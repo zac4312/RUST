@@ -1,31 +1,9 @@
 use std::io;
 use rand::Rng;
 
-struct  lifecycle{
-    answers: &str,
-    choice: &str,
-    guessNum: u32,
-    guessLimit: u32,
-}
-
-impl lifecycle {
-    
-    fn storeAns(&str answer) {
-     let mut ans: Vec<String> = Vec::new();
-     ans.push(answer);
-    } 
-}
-
-
 fn main() { 
    
-    let cycle = new lifecycle {
-        
-        answers: "",
-        choice: "y",
-        guessNum: 0,
-        guessLimit: 5,
-    }
+    let mut ans: Vec<String> = Vec::new();
 
     let mut choice = String::from("y"); 
     io::stdin().read_line(&mut choice)
@@ -51,8 +29,8 @@ fn main() {
         } else { println!("Incorroce!"); 
                  println!("The number was: {str_num}"); 
                } 
-
-        cycle.storeAns(guess); 
+ 
+        ans.push(guess);
         
         println!("Again? (y/n): "); 
         choice.clear(); 
