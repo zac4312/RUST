@@ -1,5 +1,5 @@
-use std::io;
-use rand::Rng;
+mod game
+use game::Game
 
 fn round() {
 
@@ -16,12 +16,8 @@ fn round() {
         println!("Attempt Number: {}", attempt_count);
         println!("Guess a number from 1-5!");
                
-        let num = rand::thread_rng().gen_range(1..=5); 
-        let str_num = num.to_string(); println!("Enter a guess:"); 
+        let num =         let str_num = num.to_string(); println!("Enter a guess:"); 
         
-        let mut guess = String::new();
-        io::stdin().read_line(&mut guess) 
-                   .expect("Wrong guess"); 
         ans.push(guess.clone());
 
         if guess.trim() == str_num {
@@ -48,17 +44,20 @@ fn round() {
 
 fn main() { 
     
-    let mut choice = String::from("y");
-    let mut round_count = 0;
+  //  let mut choice = String::from("y");
+    //let mut round_count = 0;
 
-    while choice.trim() == "y" {
-        round_count +=1;
-        println!("--------------");
-        println!("Round: {}", round_count);
-        round();
-        println!("Again? (y/n)");
-        choice.clear();
-        io::stdin().read_line(&mut choice).expect("wrong input");        
-    }
+    //while choice.trim() == "y" {
+      //  round_count +=1;
+       // println!("--------------");
+       // println!("Round: {}", round_count);  
+       // println!("Again? (y/n)");
+       // choice.clear();
+       // io::stdin().read_line(&mut choice).expect("wrong input");        
+   // }
+    
+    let mut start = Game::new();
+
+
 }
 
