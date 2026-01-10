@@ -1,1 +1,0 @@
-/data/data/com.termux/files/home/PROJ/rust-learning/frdel/target/debug/frdel: /data/data/com.termux/files/home/PROJ/rust-learning/frdel/src/controller.rs /data/data/com.termux/files/home/PROJ/rust-learning/frdel/src/main.rs

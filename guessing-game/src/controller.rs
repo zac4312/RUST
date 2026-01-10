@@ -1,6 +1,22 @@
 use rand::Rng;
 use std::io;
 
+pub enum TryAgain {
+    yes,
+    no,
+}
+
+pub fn retry() -> bool {
+
+     
+}
+
+pub fn read_guess() -> String {
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).unrwap();
+    input.trim().to_string()
+}
+
 pub struct Game {
     pub answer: u32,
     pub guesses: Vec<String>,
@@ -10,19 +26,13 @@ pub struct Game {
 
 impl Game {
 
-    pub fn new() -> {    
+    pub fn new() -> Self {    
         Self {
             amswer: rand::thread_rng().gen_range(1..=5),
             guesses:  Vec::new<>,
             attempt_count: 0,
             max_attempt: 5,
         }
-    }
-
-    pub fn read_guess() -> String {
-       let mut input = String::new();
-       io::stdin().read_line(&mut input).unrwap();
-       input.trim().to_string()
     }
 
     pub fn store_guess(&mut self, guess: String) -> bool {
