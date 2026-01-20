@@ -1,7 +1,4 @@
-mod util;
-use util::*;
-use std::io;
-
+#[derive(Debug)]
 pub enum TaskState {
     Pending,
     Completed,
@@ -19,41 +16,64 @@ pub fn set_state(task_state: &str) -> TaskState {
     }
 }
 
+#[derive(Debug)]
 pub enum Action {
   Add,
-  Mark_As { id: usize, state: TaskState },
+  MarkAs { id: usize, state: TaskState },
   List,
   Quit,
-  Invalid,
 }
 
-pub fn do_action(act: Action) -> Task {
-    match act {
-        
-       Action::Add => { Task::add() }
-       
+pub fn do_action(act: Action) {
+    match act { 
+       Action::Add => Task::push_to_storage(),
+       _ => {}, 
     }
 }
 
-pub struct Task{
+#[derive(Debug)]
+pub struct Task {
    pub title: String,
-   pub Id: usize,    
+   pub id: usize,    
    pub state: TaskState,  
 }
 
 impl Task {
 
-    pub fn build() -> Self {        
+    pub fn build_task(title: String, id: usize, state: TaskState) -> Self {         
        Self {
-            title: String::from("Task{}", count_tasks()),
-            Id: util::count_tasks(),
-            state: TaskState::Unassigned,
+            title,
+            id,
+            state,
         }
     }
 
-    pub fn add() {      
-        let task = Self::build();
-        util::store_tasks(task;
-    }    
+    pub fn push_to_storage() {      
+        println!("ddd");
+    }   
+
 }
+
+#[derive(Debug)]
+pub struct AppState {
+    pub storage: Vec<Task>,
+    pub counter: usize,
+}
+
+impl AppState {   
+
+    pub fn build_app() -> Self {
+        Self {
+            storage: Vec::new(),
+            counter: 0,
+        }
+    }   
+
+    pub fn count(&mut self) -> usize{    
+        self.counter  += 1;
+        self.counter
+    }
+}
+
+
 
