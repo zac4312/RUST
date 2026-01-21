@@ -1,1 +1,1 @@
-/home/zacm/rust-project/task_manager/target/debug/task_manager: /home/zacm/rust-project/task_manager/src/controller.rs /home/zacm/rust-project/task_manager/src/main.rs
+/data/data/com.termux/files/home/PROJ/rust-learning/task_manager/target/debug/task_manager: /data/data/com.termux/files/home/PROJ/rust-learning/task_manager/src/controller.rs /data/data/com.termux/files/home/PROJ/rust-learning/task_manager/src/main.rs
