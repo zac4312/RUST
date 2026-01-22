@@ -29,11 +29,14 @@ while repeat == "y" {
         title = format!("task{}", b.count());
     }
    
-    let a = Task::build_task(title, b.count(), controller::set_state(&choice)); //replace b. count() to b.counter
+    let a = Task::build_task(title, b.counter, controller::set_state(&choice.trim()));
 
     println!("{:?}", a);
-    println!("{:?}", b);
 
+    b.storage.push(a);
+
+
+    println!("{:?}", b);
 }
 }
 

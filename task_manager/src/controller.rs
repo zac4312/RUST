@@ -24,12 +24,12 @@ pub enum Action {
   Quit,
 }
 
-pub fn do_action(act: Action) {
-    match act { 
-       Action::Add => Task::push_to_storage(),
-       _ => {}, 
-    }
-}
+//pub fn do_action(act: Action) {
+  //  match act { 
+    //   Action::Add => Task::push_to_storage(),
+      // _ => {}, 
+    //}
+//}
 
 #[derive(Debug)]
 pub struct Task {
@@ -48,9 +48,6 @@ impl Task {
         }
     }
 
-    pub fn push_to_storage() {      
-        println!("ddd");
-    }   
 
 }
 
@@ -72,7 +69,7 @@ impl AppState {
     pub fn count(&mut self) -> usize{    
         self.counter  += 1;
         self.counter
-    }
+    }   
 }
 
 
