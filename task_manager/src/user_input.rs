@@ -3,7 +3,7 @@ use std::io;
 pub fn choose_act() -> String {
     println!("--------------------------------------------------------------");
     println!("--------------------------------------------------------------");
-    println!("1: add task || 2: show tasks || 3: edit task state || 4: exit");
+    println!("1: add task || 2: show tasks || 3: edit task state || 4: search by Id || 5: exit");
     let mut act_choice = String::new();
     io::stdin()
         .read_line(&mut act_choice)
@@ -34,7 +34,7 @@ pub fn set_title() -> String {
     title.trim().to_string()
 }
 
-pub fn edit_state() -> usize {
+pub fn search_id() -> usize {
     println!("Enter task Id: ");
     let mut id_choice = String::new();
     io::stdin()

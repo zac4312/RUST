@@ -12,7 +12,7 @@ pub fn set_state(task_state: &str) -> TaskState {
     match task_state {
         "1" => TaskState::Pending,
         "2" => TaskState::Completed,
-        "4" => TaskState::Dropped,
+        "3" => TaskState::Dropped,
         
         _ => TaskState::Unassigned,
     }
@@ -21,7 +21,8 @@ pub fn set_state(task_state: &str) -> TaskState {
 #[derive(Debug)]
 pub enum Action {
   Add,
-  MarkAs { id: usize, state: TaskState },
+  ListId,
+  MarkAs,
   Quit,
   List,
 }
@@ -30,6 +31,7 @@ pub fn do_action(act: Action, stats: &mut AppStats) {
   match act { 
     Action::Add => Task::add_task(stats),
     Action::List => Task::show_tasks(stats),
+    Action::ListId => Task::search_by_id(stats),
     Action::Quit => Task::quit(stats),
     _ => {}, 
   }
@@ -67,17 +69,17 @@ impl Task {
     
     pub fn quit(stats: &AppStats) { println!("{:?}", stats.storage); println!("quitting..."); }  
 
-    pub fn edit_state(stats: AppStats) {
-        let target_id = user_input::edit_state(); 
+    pub fn search_by_id(target_task: Self, stats: AppStats) {
+        let target_id = user_input::search_id(); 
         let stored_tasks = stats.storage;
 
-        for stats.counter in stored_tasks.iter() {
-            match target_id {
-                 stats.counter => format!("{}", self.)
-            } 
-        }
-    } 
-}
+        for target_task in stored_tasks.iter() {
+            if target_task.id == target_id {
+                println!("{:?}", target_task);
+            }
+        }    
+    }
+} 
 
 #[derive(Debug)]
 pub struct AppStats {
