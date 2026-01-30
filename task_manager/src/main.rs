@@ -3,8 +3,6 @@ mod user_input;
 
 use crate::controller::Action;
 use crate::controller::AppStats;
-use crate::controller::Task;
-
 
 fn main() {
     
@@ -17,7 +15,7 @@ fn main() {
         let action = match todo.as_str() {
             "1" => Action::Add,
             "2" => Action::List,
-            "4" => Action::ListId,
+            "4" => Action::ListId {task_id: stats.counter},
             _ => Action::Quit, 
         };
 

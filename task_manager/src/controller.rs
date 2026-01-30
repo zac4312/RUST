@@ -21,7 +21,7 @@ pub fn set_state(task_state: &str) -> TaskState {
 #[derive(Debug)]
 pub enum Action {
   Add,
-  ListId {obj: &Task},
+  ListId {task_id: usize},
   MarkAs,
   Quit,
   List,
@@ -31,7 +31,7 @@ pub fn do_action(act: Action, stats: &mut AppStats) {
   match act { 
     Action::Add => Task::add_task(stats),
     Action::List => Task::show_tasks(stats),
-    Action::ListId {obj: &Task} => Task::search_by_id(&obj, stats),
+    Action::ListId {task_id} => Task::search_by_id(task_id, stats),
     Action::Quit => Task::quit(stats),
     _ => {}, 
   }
@@ -69,13 +69,14 @@ impl Task {
     
     pub fn quit(stats: &AppStats) { println!("{:?}", stats.storage); println!("quitting..."); }  
 
-    pub fn search_by_id(target_task: Self, stats: &AppStats) {
+    pub fn search_by_id(task_id: usize, stats: &AppStats) {
         let target_id = user_input::search_id(); 
         let stored_tasks = &stats.storage;
 
-        for target_task in stored_tasks.iter() {
-            if target_task.id == target_id {
-                println!("{:?}", target_task);
+        for Task in stored_tasks.iter() {
+            println!("for loop succeded: Task is >> {:?}", Task);
+            if task_id == target_id {
+                println!("if condition succeded: RETURN THE TASK");
             }
         }    
     }

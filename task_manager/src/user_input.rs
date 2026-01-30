@@ -41,6 +41,7 @@ pub fn search_id() -> usize {
         .read_line(&mut id_choice)
         .expect("set_state err");
    
-   id_choice.parse::<usize>()
-        .expect("Id parsing err")
+   id_choice.trim()
+            .parse::<usize>()
+            .expect("Id parsing err")
 }
