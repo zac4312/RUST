@@ -21,7 +21,7 @@ pub fn set_state(task_state: &str) -> TaskState {
 #[derive(Debug)]
 pub enum Action {
   Add,
-  ListId {task_id: usize},
+  ListId, 
   MarkAs,
   Quit,
   List,
@@ -31,7 +31,7 @@ pub fn do_action(act: Action, stats: &mut AppStats) {
   match act { 
     Action::Add => Task::add_task(stats),
     Action::List => Task::show_tasks(stats),
-    Action::ListId {task_id} => Task::search_by_id(task_id, stats),
+    Action::ListId => Task::search_by_id(stats),
     Action::Quit => Task::quit(stats),
     _ => {}, 
   }
@@ -61,7 +61,7 @@ impl Task {
         let state = user_input::choose_state();
         let id = stats.count();
         let task = Self::build_task(title, id, set_state(&state));
-        println!("{:?}", task);
+        println!("Saved task: {:?}", task);
         stats.storage.push(task);
     } 
 
@@ -69,14 +69,13 @@ impl Task {
     
     pub fn quit(stats: &AppStats) { println!("{:?}", stats.storage); println!("quitting..."); }  
 
-    pub fn search_by_id(task_id: usize, stats: &AppStats) {
+    pub fn search_by_id(stats: &AppStats) {
         let target_id = user_input::search_id(); 
         let stored_tasks = &stats.storage;
 
-        for Task in stored_tasks.iter() {
-            println!("for loop succeded: Task is >> {:?}", Task);
-            if task_id == target_id {
-                println!("if condition succeded: RETURN THE TASK");
+        for task in stored_tasks.iter() {            
+            if task.id == target_id {
+                println!("{:?}", task);
             }
         }    
     }
