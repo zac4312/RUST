@@ -1,23 +1,5 @@
 use crate::user_input;
 
-#[derive(Debug, Clone)]
-pub enum TaskState {
-    Pending,
-    Completed,
-    Dropped,
-    Unassigned,
-}
-
-pub fn set_state(task_state: &str) -> TaskState { 
-    match task_state {
-        "1" => TaskState::Pending,
-        "2" => TaskState::Completed,
-        "3" => TaskState::Dropped,
-        
-        _ => TaskState::Unassigned,
-    }
-}
-
 #[derive(Debug)]
 pub enum Action {
   Add,
@@ -42,6 +24,46 @@ pub struct Task {
    pub title: String,
    pub id: usize,    
    pub state: TaskState,  
+}
+
+#[derive(Debug, Clone)]
+pub enum TaskState {
+    Pending,
+    Completed,
+    Dropped,
+    Unassigned,
+}
+
+pub fn set_state(task_state: &str) -> TaskState { 
+    match task_state {
+        "1" => TaskState::Pending,
+        "2" => TaskState::Completed,
+        "3" => TaskState::Dropped,
+        
+        _ => TaskState::Unassigned,
+    }
+}
+
+#[derive(Debug)]
+pub struct AppStats {
+    pub storage: Vec<Task>,
+    pub counter: usize,
+}
+
+impl AppStats {   
+
+    pub fn build_app() -> Self {
+        Self {
+            storage: Vec::new(),
+            counter: 0,
+        }
+    }   
+
+    pub fn count(&mut self) -> usize {    
+        self.counter  += 1;
+        self.counter
+    }   
+
 }
 
 impl Task {
@@ -73,57 +95,33 @@ impl Task {
     pub fn invalid_option() {println!("Invalid Option");}
 
     pub fn search_by_id(stats: &AppStats) {
-        let target_id = user_input::search_id();  
-
-        for task in stats.storage.iter() {            
-            if task.id == target_id {
-                println!("{:?}", task);
-                break;
-            } else {println!("Please enter the task ID"); break;}
+        let target_id = user_input::search_id();
+        
+        match stats.storage.iter().find(|task| task.id == target_id) {
+            Some(task) => println!("{:?}", task),
+            None => println!("ID not fount"),
         }    
     }
 
     pub fn edit_task(stats: &mut AppStats) {
         let target_id = user_input::search_id(); 
 
-        for task in stats.storage.iter_mut() {            
-            if task.id == target_id { 
-                println!("Editing Task: {:?}", task); 
+         match stats.storage.iter_mut().find(|task| task.id == target_id) {
+                Some(task) => { 
+                    println!("Editing Task: {:?}", task); 
 
-                task.title = user_input::set_title();
-                if task.title.is_empty() {task.title = format!("task{}", task.id);}
+                    task.title = user_input::set_title();
+                    if task.title.is_empty() {task.title = format!("task{}", task.id);}
 
-                let ref_state = user_input::choose_state();
-                task.state = set_state(&ref_state);
-                println!("Updtated Task: {:?}", task);
-                break;
-            } else {println!("Please enter the task ID"); break;} 
+                    let ref_state = user_input::choose_state();
+                    task.state = set_state(&ref_state);
+                    println!("Updtated Task: {:?}", task);
+                }, 
+
+                None => {println!("ID not found");},
         }
     }
 
 } 
-
-#[derive(Debug)]
-pub struct AppStats {
-    pub storage: Vec<Task>,
-    pub counter: usize,
-}
-
-impl AppStats {   
-
-    pub fn build_app() -> Self {
-        Self {
-            storage: Vec::new(),
-            counter: 0,
-        }
-    }   
-
-    pub fn count(&mut self) -> usize {    
-        self.counter  += 1;
-        self.counter
-    }   
-
-}
-
 
 
