@@ -1,4 +1,5 @@
 use crate::user_input;
+use crate::error_handling::Error;
 
 #[derive(Debug)]
 pub enum Action {
@@ -13,7 +14,7 @@ pub fn do_action(act: Action, stats: &mut AppStats) {
   match act { 
     Action::Add => Task::add_task(stats),
     Action::List => Task::show_tasks(stats),
-    Action::ListId => Task::search_by_id(stats),
+    Action::ListId => search_id_out(stats),
     Action::EditTask => Task::edit_task(stats), 
     Action::Invalid => Task::invalid_option(),
   }
@@ -94,12 +95,11 @@ impl Task {
     
     pub fn invalid_option() {println!("Invalid Option");}
 
-    pub fn search_by_id(stats: &AppStats) {
-        let target_id = user_input::search_id();
-        
-        match stats.storage.iter().find(|task| task.id == target_id) {
-            Some(task) => println!("{:?}", task),
-            None => println!("ID not fount"),
+    pub fn search_by_id(target_id: usize, stats: &AppStats) {
+                
+        match stats.storage.iter().find(|task| task.id == target_id) /* convert Option outcome to Result */ {
+            Ok(task) => task,
+            Err(Error::TaskNotFound) => "Task Not Found"
         }    
     }
 
@@ -123,5 +123,20 @@ impl Task {
     }
 
 } 
+
+//assosciated fn()
+
+pub fn search_id_out(stats: &AppStats) {
+   let target_id = user_input::search_id();
+   Task::search_by_id(target_id, stats); 
+}
+
+
+
+
+
+
+
+
 
 
