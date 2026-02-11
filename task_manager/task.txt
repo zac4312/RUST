@@ -1,9 +1,4 @@
 TODO:
--| task manager
- -| add task
- -| mark task
- -| list task
- -| exit
 
-
-
+handle Invalid Input err:
+- check expected choice
