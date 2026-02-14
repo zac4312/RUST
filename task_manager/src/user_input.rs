@@ -1,17 +1,16 @@
 use std::io;
 use crate::err_handling::Error;
 
-pub fn choose_act() -> Result<u8, Error> {
+pub fn choose_act() -> Result<u8, Error> { 
     println!("--------------------------------------------------------------");
     println!("--------------------------------------------------------------");
     println!("1: add task || 2: show tasks || 3: edit task state || 4: search by Id || 5: exit");
     let mut act_choice = String::new();
     io::stdin().read_line(&mut act_choice);
     
-    match expected_action().iter().find(|choice| choice == act_choice.parse::<u8>()) {
-        Some(act_choice) => Ok(act_choice),
-        None => Err(Error::InvalidInput),
-    }
+    act_choice.trim()
+              .parse::<u8>()
+              .map_err(|_| Error::InvalidInput)
 }
 
 pub fn choose_state() -> Result<u8, Error> {
@@ -19,13 +18,12 @@ pub fn choose_state() -> Result<u8, Error> {
     println!("Set Task STATE: ");
     let mut state_choice = String::new();
     io::stdin()
-        .read_line(&mut state_choice)
-
-    match expected_state().iter().find(|choice| choice == state_choice.parse::<u8>()) {
-        Some(state_choice) => Ok(state_choice),
-        None => Err(Error::InvalidInput),
-    }
-}
+        .read_line(&mut state_choice);
+        
+    state_choice.trim()
+                .parse::<u8>()
+                .map_err(|_| Error::InvalidInput)
+ }
  
 pub fn set_title() -> String {
     //set task title
@@ -42,10 +40,9 @@ pub fn search_id() -> Result<usize, Error> {
     println!("Enter task Id: ");
     let mut id_choice = String::new();
     io::stdin()
-        .read_line(&mut id_choice)
-        .expect("set_state err");
+        .read_line(&mut id_choice);
    
-    if let Ok(id_choice) = id_choice.trim().parse::<usize>() {
-        Id_choice
-    } else { Error::InvalidInput }
- }
+    id_choice.trim()
+             .parse::<usize>()
+             .map_err(|_| Error::InvalidInput)
+}

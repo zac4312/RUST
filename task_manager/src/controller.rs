@@ -7,17 +7,17 @@ pub enum Action {
   ListId, 
   EditTask,
   List,
-  Invalid,
+  Invalid
 }
 
-pub fn do_action(act: Action, stats: &mut AppStats) {
+pub fn do_action(act: Action, stats: &mut AppStats) -> Result<(), Error> {
   match act { 
-    Action::Add => Task::add_task(stats),
-    Action::List => Task::show_tasks(stats),
-    Action::ListId => search_id_out(stats),
-    Action::EditTask => edit_task_out(stats), 
-    Action::Invalid => Task::invalid_option(),
-  };
+    Action::Add => Ok(add_task_out(stats))?,
+    Action::List =>  Ok(Task::show_tasks(stats)),
+    Action::ListId => Ok(search_id_out(stats))?,
+    Action::EditTask => Ok(edit_task_out(stats))?,
+    Action::Invalid => Ok(invalid()),
+  }
 }
 
 #[derive(Debug, Clone)]
@@ -28,13 +28,13 @@ pub enum TaskState {
     Unassigned,
 }
 
-pub fn set_state(task_state: u8) -> TaskState { 
+pub fn set_state(task_state: u8) -> Result<TaskState, Error> { 
     match task_state {
-        1 => TaskState::Pending,
-        2 => TaskState::Completed,
-        3 => TaskState::Dropped,
+        1 => Ok(TaskState::Pending),
+        2 => Ok(TaskState::Completed),
+        3 => Ok(TaskState::Dropped),
         
-        _ => TaskState::Unassigned,
+        _ => { Ok::<TaskState, Error>(TaskState::Unassigned); Err(set_default_state()) },
     }
 }
 
@@ -47,7 +47,7 @@ pub struct AppStats {
 impl AppStats {   
 
     pub fn build_app() -> Self {
-        Self {
+        Self { 
             storage: Vec::new(),
             counter: 0,
         }
@@ -57,7 +57,6 @@ impl AppStats {
         self.counter  += 1;
         self.counter
     }   
-
 }
 
 #[derive(Debug, Clone)]
@@ -77,24 +76,14 @@ impl Task {
         }
     }
  
-    pub fn add_task(stats: &mut AppStats) {
-        let id = stats.count();
-
-        let mut title = user_input::set_title();
-        if title.is_empty() {title = format!("task{}", stats.counter);}
-
-        let state = user_input::choose_state(); 
-
-
-        let task = Self::build_task(title, id, set_state(&state));
-        println!("Saved task: {:?}", task);
+    pub fn add_task(title: String, id: usize, state: &u8, stats: &mut AppStats) -> Result<(), Error> {
+        let task = Self::build_task(title, id, set_state(*state)?);
         stats.storage.push(task);
+        Ok(())
     } 
 
     pub fn show_tasks(stats: &AppStats) { println!("{:?}", stats.storage); } 
-    
-    pub fn invalid_option() {println!("Invalid Option");}
-
+     
     pub fn search_by_id(target_id: usize, stats: &mut AppStats) -> Result<&mut Task, Error> { 
         match stats.storage.iter_mut().find(|task| task.id == target_id) {
             Some(task) => Ok(task),
@@ -102,35 +91,50 @@ impl Task {
         }    
     }
 
-    pub fn edit_task(target_id: usize, stats: &mut AppStats) -> Result<(), Error> {
+    pub fn edit_task(title: String, state: u8, target_id: usize, stats: &mut AppStats) -> Result<(), Error> {
          
        let found_task: &mut Task = Self::search_by_id(target_id, stats)?; 
             println!("Editing Task: {:?}", found_task); 
 
-            found_task.title = user_input::set_title();
-            if found_task.title.is_empty() {found_task.title = format!("task{}", found_task.id);}
-
-            let ref_state = user_input::choose_state();
-            found_task.state = set_state(&ref_state);
-            println!("Updtated Task: {:?}", found_task);
+            found_task.title = title;
+            found_task.state = set_state(state)?;
             Ok(())
-    } 
-} 
-
+    }
+}
 //assosciated fn()
 
-pub fn search_id_out(stats: &mut AppStats) {
-   let target_id = user_input::search_id(); 
-   let searchId_out = Task::search_by_id(target_id, stats);
-   println!("{:?}", searchId_out);
+pub fn search_id_out(stats: &mut AppStats) -> Result<(), Error> {
+   let target_id =  user_input::search_id()?; 
+   let searchId = Task::search_by_id(target_id, stats);
+   println!("{:?}", searchId);
+   Ok(())
 }
 
-pub fn  edit_task_out(stats: &mut AppStats) {
-   let target_id = user_input::search_id(); 
-   let edit_out = Task::edit_task(target_id, stats);
-   println!("{:?}", edit_out); 
+pub fn  edit_task_out(stats: &mut AppStats) -> Result<(), Error> {
+    let target_id = user_input::search_id()?; 
+    Task::search_by_id(target_id, stats)?;
+    let mut title = user_input::set_title();
+    if title.is_empty() {title = format!("task{}", stats.counter);}
+    
+    let state = user_input::choose_state()?;
+    let editTask = Task::edit_task(title, state, target_id, stats);
+
+    println!("{:?}", editTask);
+    Ok(())
+}
+
+pub fn add_task_out(stats: &mut AppStats) -> Result<(), Error> { 
+    let id = stats.count();
+
+    let mut title = user_input::set_title();
+    if title.is_empty() { title = format!("task{}", stats.counter); }
+   
+    let state = user_input::choose_state()?;
+     
+    let task = Task::add_task(title, id, &state, stats);
+    println!("Task Saved: {:?}", stats.storage);
+     Ok(())
 } 
 
-
-
-
+pub fn invalid() { println!("{:?}", Error::InvalidInput); }
+pub fn set_default_state() -> Error {println!("Due to: {:?} State is Unnasigned", Error::InvalidInput); Error::InvalidInput}
