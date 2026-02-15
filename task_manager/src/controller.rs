@@ -34,7 +34,7 @@ pub fn set_state(task_state: u8) -> Result<TaskState, Error> {
         2 => Ok(TaskState::Completed),
         3 => Ok(TaskState::Dropped),
         
-        _ => { Ok::<TaskState, Error>(TaskState::Unassigned); Err(set_default_state()) },
+        _ => { Err::<TaskState, Error>(set_default_state()); Ok(TaskState::Unassigned) },
     }
 }
 
@@ -124,10 +124,10 @@ pub fn  edit_task_out(stats: &mut AppStats) -> Result<(), Error> {
 }
 
 pub fn add_task_out(stats: &mut AppStats) -> Result<(), Error> { 
-    let id = stats.count();
-
     let mut title = user_input::set_title();
-    if title.is_empty() { title = format!("task{}", stats.counter); }
+    if title.is_empty() { title = format!("task{}", stats.count()); }
+
+    let id = stats.counter;
    
     let state = user_input::choose_state()?;
      
